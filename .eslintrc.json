@@ -11,6 +11,8 @@
       {
         "ImportDeclaration": { "multiline": true }
       }
-    ]
+    ],
+    "operator-linebreak": "off",
+    "implicit-arrow-linebreak": "off"
   }
 }

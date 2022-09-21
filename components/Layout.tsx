@@ -1,4 +1,4 @@
-import { Avatar, Container, Dropdown, Navbar, Text } from '@nextui-org/react';
+import { Avatar, Dropdown, Navbar, Text } from '@nextui-org/react';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import { FiLogOut } from 'react-icons/fi';
@@ -104,7 +104,7 @@ export default function Layout({ children }: LayoutProps) {
           <Navbar.CollapseItem>About</Navbar.CollapseItem>
         </Navbar.Collapse>
       </Navbar>
-      <Container gap={1}>{children}</Container>
+      {children}
     </Box>
   );
 }
