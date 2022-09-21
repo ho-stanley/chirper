@@ -1,4 +1,5 @@
 import { Card, Text } from '@nextui-org/react';
+import { format } from 'date-fns';
 import { Post } from '../typings/post';
 
 type PostCardProps = {
@@ -12,7 +13,9 @@ export default function PostCard({ post }: PostCardProps) {
     <Card isPressable>
       <Card.Header>
         <Text b>{authorName}</Text>
-        <Text css={{ ml: 'auto' }}>{createdAt}</Text>
+        <Text css={{ ml: 'auto' }}>
+          {format(new Date(createdAt), 'yyyy-MM-dd HH:mm:ss')}
+        </Text>
       </Card.Header>
       <Card.Divider />
       <Card.Body>
