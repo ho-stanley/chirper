@@ -53,15 +53,21 @@ const Page: NextPageWithLayout<PageProps> = ({ fallback }) => (
 );
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const posts = await fetcher<Post[]>(URL);
+  try {
+    const posts = await fetcher<Post[]>(URL);
 
-  return {
-    props: {
-      fallback: {
-        [URL]: posts,
+    return {
+      props: {
+        fallback: {
+          [URL]: posts,
+        },
       },
-    },
-  };
+    };
+  } catch {
+    return {
+      notFound: true,
+    };
+  }
 };
 
 export default Page;
