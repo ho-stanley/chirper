@@ -1,10 +1,9 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import Head from 'next/head';
 import { Container, Spacer, Text } from '@nextui-org/react';
 import { GetServerSideProps } from 'next';
 import useSWR, { SWRConfig } from 'swr';
 import Link from 'next/link';
-import Layout from '../components/Layout';
 import type { NextPageWithLayout } from './_app';
 import PostCard from '../components/PostCard';
 import { Post } from '../typings/post';
@@ -47,6 +46,9 @@ function RecentPosts() {
 
 const Page: NextPageWithLayout<PageProps> = ({ fallback }) => (
   <SWRConfig value={{ fallback }}>
+    <Head>
+      <title>Chirper - Home</title>
+    </Head>
     <RecentPosts />
   </SWRConfig>
 );
@@ -61,17 +63,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
       },
     },
   };
-};
-
-Page.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <>
-      <Head>
-        <title>Chirper - Home</title>
-      </Head>
-      <Layout>{page}</Layout>
-    </>
-  );
 };
 
 export default Page;
