@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import { Container, Spacer, Text } from '@nextui-org/react';
+import { Container, Text } from '@nextui-org/react';
 import { GetServerSideProps } from 'next';
 import useSWR, { SWRConfig } from 'swr';
 import Link from 'next/link';
@@ -31,11 +31,10 @@ function RecentPosts() {
     <Container gap={1}>
       <Text h2>Recent posts</Text>
       <PostsGrid>
-        {posts.map((post, index) => (
+        {posts.map((post) => (
           <Link href={`/posts/${post.id}`} key={post.id}>
             <div>
               <PostCard post={post} />
-              {index !== posts.length - 1 && <Spacer y={1} />}
             </div>
           </Link>
         ))}
