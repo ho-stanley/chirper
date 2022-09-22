@@ -4,13 +4,14 @@ import { Post } from '../typings/post';
 
 type PostCardProps = {
   post: Post;
+  isPressable?: boolean;
 };
 
-export default function PostCard({ post }: PostCardProps) {
+export default function PostCard({ post, isPressable = false }: PostCardProps) {
   const { authorName, createdAt, title, body } = post;
 
   return (
-    <Card isPressable>
+    <Card isPressable={isPressable}>
       <Card.Header>
         <Text b>{authorName}</Text>
         <Text css={{ ml: 'auto' }}>
