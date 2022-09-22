@@ -28,7 +28,7 @@ function RecentPosts() {
   if (!posts) return <LoadingIndicator />;
 
   return (
-    <Container gap={1}>
+    <Container gap={1} css={{ mb: '$4' }}>
       <Text h2>Recent posts</Text>
       <PostsContainer>
         {posts.map((post) => (
