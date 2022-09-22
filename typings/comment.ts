@@ -1,12 +1,9 @@
-import { Comment } from './comment';
-
-export interface Post {
+export interface Comment {
   id: string;
-  title: string;
+  postId: string;
   body: string;
   authorId: string;
   authorName: string;
   createdAt: string;
   updatedAt?: string;
-  comments?: Comment[];
 }
