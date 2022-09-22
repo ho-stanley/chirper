@@ -11,7 +11,7 @@ import { API_URL } from '../utils/config';
 import { fetcher } from '../utils/http/axios-http';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ErrorIndicator from '../components/ErrorIndicator';
-import PostsGrid from '../components/PostsGrid';
+import PostsContainer from '../components/PostsContainer';
 
 const COUNT = 10;
 const URL = `${API_URL}/posts?limit=${COUNT}`;
@@ -30,15 +30,15 @@ function RecentPosts() {
   return (
     <Container gap={1}>
       <Text h2>Recent posts</Text>
-      <PostsGrid>
+      <PostsContainer>
         {posts.map((post) => (
           <Link href={`/posts/${post.id}`} key={post.id}>
             <div>
-              <PostCard post={post} />
+              <PostCard post={post} isPressable />
             </div>
           </Link>
         ))}
-      </PostsGrid>
+      </PostsContainer>
     </Container>
   );
 }

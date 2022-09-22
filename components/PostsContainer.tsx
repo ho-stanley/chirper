@@ -1,6 +1,6 @@
 import { styled } from '@nextui-org/react';
 
-const PostsGrid = styled('div', {
+const PostsContainer = styled('div', {
   display: 'grid',
   gridTemplateColumns: '1fr',
   gap: '$10',
@@ -11,4 +11,4 @@ const PostsGrid = styled('div', {
   },
 });
 
-export default PostsGrid;
+export default PostsContainer;
