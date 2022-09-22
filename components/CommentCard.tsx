@@ -1,17 +1,16 @@
 import { Card, Text } from '@nextui-org/react';
 import { format } from 'date-fns';
-import { Post } from '../typings/post';
+import { Comment } from '../typings/comment';
 
-type PostCardProps = {
-  post: Post;
-  isPressable?: boolean;
+type CommentCardProps = {
+  comment: Comment;
 };
 
-export default function PostCard({ post, isPressable = false }: PostCardProps) {
-  const { authorName, createdAt, title, body } = post;
+export default function CommentCard({ comment }: CommentCardProps) {
+  const { authorName, body, createdAt } = comment;
 
   return (
-    <Card isPressable={isPressable}>
+    <Card variant="flat">
       <Card.Header>
         <Text b>{authorName}</Text>
         <Text css={{ ml: 'auto' }}>
@@ -20,7 +19,6 @@ export default function PostCard({ post, isPressable = false }: PostCardProps) {
       </Card.Header>
       <Card.Divider />
       <Card.Body>
-        <Text b>{title}</Text>
         <Text>{body}</Text>
       </Card.Body>
     </Card>

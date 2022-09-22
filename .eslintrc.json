@@ -13,6 +13,12 @@
       }
     ],
     "operator-linebreak": "off",
-    "implicit-arrow-linebreak": "off"
+    "implicit-arrow-linebreak": "off",
+    "react/require-default-props": [
+      2,
+      {
+        "functions": "defaultArguments"
+      }
+    ]
   }
 }

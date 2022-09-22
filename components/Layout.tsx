@@ -39,10 +39,10 @@ export default function Layout({ children }: LayoutProps) {
         </Link>
         <Navbar.Content hideIn="sm" enableCursorHighlight activeColor="primary">
           <Link href="/">Home</Link>
-          <Link href="/search">New Post</Link>
-          <Link href="/search">My Posts</Link>
-          <Link href="/search">Search</Link>
-          <Link href="/search">About</Link>
+          <Link href="/">New Post</Link>
+          <Link href="/">My Posts</Link>
+          <Link href="/">Search</Link>
+          <Link href="/">About</Link>
         </Navbar.Content>
         <Navbar.Content
           css={{

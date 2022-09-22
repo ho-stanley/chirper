@@ -5,6 +5,7 @@ import type { AppProps } from 'next/app';
 import type { NextPage } from 'next';
 import { ReactElement, ReactNode } from 'react';
 import { NextUIProvider } from '@nextui-org/react';
+import Layout from '../components/Layout';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   // eslint-disable-next-line no-unused-vars
@@ -21,7 +22,9 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   return getLayout(
     <NextUIProvider>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </NextUIProvider>
   );
 }
