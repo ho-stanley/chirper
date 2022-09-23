@@ -6,7 +6,7 @@ import useSWR, { SWRConfig } from 'swr';
 import Link from 'next/link';
 import type { NextPageWithLayout } from './_app';
 import PostCard from '../components/PostCard';
-import { Post } from '../typings/post';
+import { Post } from '../types/post';
 import { API_URL } from '../utils/config';
 import { fetcher } from '../utils/http/axios-http';
 import LoadingIndicator from '../components/LoadingIndicator';
