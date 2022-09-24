@@ -1,10 +1,10 @@
-import { Avatar, Dropdown, Navbar, Text } from '@nextui-org/react';
+import { Navbar, Text } from '@nextui-org/react';
 import Link from 'next/link';
 import { ReactNode } from 'react';
-import { FiLogOut } from 'react-icons/fi';
 import { FaKiwiBird } from 'react-icons/fa';
 import Box from './Box';
 import BurgerLink from './BurgerLink';
+import NavbarAvatar from './NavbarAvatar';
 
 type LayoutProps = {
   children: ReactNode;
@@ -52,46 +52,7 @@ export default function Layout({ children }: LayoutProps) {
             },
           }}
         >
-          <Dropdown placement="bottom-right">
-            <Navbar.Item>
-              <Dropdown.Trigger>
-                <Avatar
-                  text="Username"
-                  color="primary"
-                  textColor="white"
-                  src="https://i.pravatar.cc/150?img=3"
-                  bordered
-                  pointer
-                />
-              </Dropdown.Trigger>
-            </Navbar.Item>
-            <Dropdown.Menu aria-label="User menu actions" color="primary">
-              <Dropdown.Item
-                key="profile"
-                css={{ h: '$18' }}
-                textValue="Signed in as"
-              >
-                <Text b css={{ d: 'flex' }}>
-                  Signed in as
-                </Text>
-                <Text b css={{ d: 'flex' }}>
-                  Username
-                </Text>
-              </Dropdown.Item>
-              <Dropdown.Item key="settings" withDivider>
-                Settings
-              </Dropdown.Item>
-              <Dropdown.Item
-                key="logout"
-                withDivider
-                color="error"
-                textValue="Logout"
-              >
-                <FiLogOut style={{ marginRight: '0.5rem' }} />
-                Logout
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+          <NavbarAvatar />
         </Navbar.Content>
         <Navbar.Collapse disableAnimation disableBlur>
           <BurgerLink href="/" linkKey="home">
@@ -101,6 +62,7 @@ export default function Layout({ children }: LayoutProps) {
             New post
           </BurgerLink>
           <Navbar.CollapseItem>My posts</Navbar.CollapseItem>
+          <Navbar.CollapseItem>Search</Navbar.CollapseItem>
           <Navbar.CollapseItem>About</Navbar.CollapseItem>
         </Navbar.Collapse>
       </Navbar>
