@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable comma-dangle */
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import type { NextPage } from 'next';
 import { ReactElement, ReactNode } from 'react';
 import { NextUIProvider } from '@nextui-org/react';
+import { SessionProvider } from 'next-auth/react';
 import Layout from '../components/Layout';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -21,10 +21,12 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return getLayout(
-    <NextUIProvider>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </NextUIProvider>
+    <SessionProvider session={pageProps.session}>
+      <NextUIProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </NextUIProvider>
+    </SessionProvider>
   );
 }
