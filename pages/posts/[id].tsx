@@ -8,7 +8,7 @@ import CommentsContainer from '../../components/CommentsContainer';
 import ErrorIndicator from '../../components/ErrorIndicator';
 import LoadingIndicator from '../../components/LoadingIndicator';
 import PostCard from '../../components/PostCard';
-import { Post as PostType } from '../../typings/post';
+import { Post as PostType } from '../../types/post';
 import { API_URL } from '../../utils/config';
 import { fetcher } from '../../utils/http/axios-http';
 import { NextPageWithLayout } from '../_app';

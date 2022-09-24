@@ -1,6 +1,6 @@
 import { Card, Text } from '@nextui-org/react';
 import { format } from 'date-fns';
-import { Post } from '../typings/post';
+import { Post } from '../types/post';
 
 type PostCardProps = {
   post: Post;

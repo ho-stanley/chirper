@@ -1,6 +1,6 @@
 import { Card, Text } from '@nextui-org/react';
 import { format } from 'date-fns';
-import { Comment } from '../typings/comment';
+import { Comment } from '../types/comment';
 
 type CommentCardProps = {
   comment: Comment;
