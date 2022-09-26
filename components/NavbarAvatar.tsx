@@ -1,9 +1,12 @@
 import { Avatar, Dropdown, Navbar, Text } from '@nextui-org/react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { FiLogIn, FiLogOut } from 'react-icons/fi';
+import { BsPencilSquare } from 'react-icons/bs';
+import { useRouter } from 'next/router';
 
 export default function NavbarAvatar() {
   const { data } = useSession();
+  const { push } = useRouter();
 
   return (
     <>
@@ -70,6 +73,16 @@ export default function NavbarAvatar() {
             <Dropdown.Item key="profile" textValue="Not signed in">
               <Text b css={{ d: 'flex' }}>
                 Not signed in
+              </Text>
+            </Dropdown.Item>
+            <Dropdown.Item
+              key="signup"
+              color="primary"
+              textValue="Signup"
+              icon={<BsPencilSquare />}
+            >
+              <Text color="primary" onClick={() => push('/signup')}>
+                Signup
               </Text>
             </Dropdown.Item>
             <Dropdown.Item
