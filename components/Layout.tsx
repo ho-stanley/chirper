@@ -13,7 +13,7 @@ type LayoutProps = {
 const menuItems = [
   { label: 'Home', href: '/', key: 'home' },
   { label: 'New Post', href: '/', key: 'new_post' },
-  { label: 'My Posts', href: '/me/posts', key: 'my_posts' },
+  { label: 'My Posts', href: '/my-posts', key: 'my_posts' },
   { label: 'Search', href: '/', key: 'search' },
 ];
 
