@@ -12,9 +12,9 @@ import { fetcher } from '../../../utils/http/axios-http';
 import { NextPageWithLayout } from '../../_app';
 
 const MyPostsPage: NextPageWithLayout = () => {
-  const { data } = useSession();
+  const { data: session } = useSession();
   const { data: posts, error } = useSWR<Post[]>(
-    data?.user ? `${API_URL}/posts?userId=${data.user.id}` : null,
+    session?.user ? `${API_URL}/posts?userId=${session.user.id}` : null,
     fetcher
   );
 
