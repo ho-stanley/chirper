@@ -5,18 +5,18 @@ import { BsPencilSquare } from 'react-icons/bs';
 import { useRouter } from 'next/router';
 
 export default function NavbarAvatar() {
-  const { data } = useSession();
+  const { data: session } = useSession();
   const { push } = useRouter();
 
   return (
     <>
       {/* Signed in */}
-      {data && (
+      {session && (
         <Dropdown placement="bottom-right">
           <Navbar.Item>
             <Dropdown.Trigger>
               <Avatar
-                text={data.user.username}
+                text={session.user.username}
                 color="primary"
                 textColor="white"
                 bordered
@@ -34,7 +34,7 @@ export default function NavbarAvatar() {
                 Signed in as
               </Text>
               <Text b css={{ d: 'flex' }}>
-                {data.user.username}
+                {session.user.username}
               </Text>
             </Dropdown.Item>
             <Dropdown.Item key="settings" withDivider textValue="Settings">
@@ -56,7 +56,7 @@ export default function NavbarAvatar() {
       )}
 
       {/* Signed out */}
-      {!data && (
+      {!session && (
         <Dropdown placement="bottom-right">
           <Navbar.Item>
             <Dropdown.Trigger>
