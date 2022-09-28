@@ -1,21 +1,16 @@
-import {
-  Button,
-  Container,
-  Input,
-  Loading,
-  Spacer,
-  Text,
-} from '@nextui-org/react';
+import { Button, Input, Loading, Spacer, Text } from '@nextui-org/react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
+import Head from 'next/head';
 import LoadingIndicator from '../../components/LoadingIndicator';
 import { NextPageWithLayout } from '../_app';
 import { signupSchema } from '../../utils/validation-schema';
 import Form from '../../components/Form';
-import useSignup from '../../utils/http/use-signup';
+import useSignup from '../../hooks/useSignup';
+import FormContainer from '../../components/FormContainer';
 
 type SignupInputs = {
   username: string;
@@ -49,69 +44,68 @@ const SignupPage: NextPageWithLayout = () => {
   if (session) push('/');
 
   return (
-    <Container
-      gap={1}
-      display="flex"
-      direction="column"
-      alignContent="center"
-      css={{ mb: '$4' }}
-    >
-      <Text h2>Signup</Text>
-      {error && (
-        <Text blockquote color="error">
-          {error}
-        </Text>
-      )}
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          required
-          bordered
-          autoComplete="true"
-          label="Username"
-          size="xl"
-          aria-invalid={!!errors.username?.message}
-          status={errors.username?.message ? 'error' : 'default'}
-          {...register('username')}
-        />
-        {errors.username?.message && (
-          <Text role="alert">{errors.username.message}</Text>
+    <>
+      <Head>
+        <title>Chirper - Signup</title>
+      </Head>
+      <FormContainer>
+        <Text h2>Signup</Text>
+        {error && (
+          <Text blockquote color="error">
+            {error}
+          </Text>
         )}
-        <Spacer />
-        <Input.Password
-          required
-          bordered
-          label="Password"
-          size="xl"
-          aria-invalid={!!errors.password?.message}
-          status={errors.password?.message ? 'error' : 'default'}
-          {...register('password')}
-        />
-        {errors.password?.message && (
-          <Text role="alert">{errors.password.message}</Text>
-        )}
-        <Spacer />
-        <Input.Password
-          required
-          bordered
-          label="Repeat password"
-          size="xl"
-          aria-invalid={!!errors.repeatPassword?.message}
-          status={errors.repeatPassword?.message ? 'error' : 'default'}
-          {...register('repeatPassword')}
-        />
-        {errors.repeatPassword?.message && (
-          <Text role="alert">{errors.repeatPassword.message}</Text>
-        )}
-        <Spacer />
-        <Button auto size="lg" type="submit" disabled={loading}>
-          {loading ? (
-            <Loading color="currentColor" />
-          ) : (
-            <span>Create account</span>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            required
+            bordered
+            autoComplete="true"
+            label="Username"
+            size="xl"
+            aria-invalid={!!errors.username?.message}
+            status={errors.username?.message ? 'error' : 'default'}
+            {...register('username')}
+          />
+          {errors.username?.message && (
+            <Text role="alert">{errors.username.message}</Text>
           )}
-        </Button>
-      </Form>
-    </Container>
+          <Spacer />
+          <Input.Password
+            required
+            bordered
+            label="Password"
+            size="xl"
+            aria-invalid={!!errors.password?.message}
+            status={errors.password?.message ? 'error' : 'default'}
+            {...register('password')}
+          />
+          {errors.password?.message && (
+            <Text role="alert">{errors.password.message}</Text>
+          )}
+          <Spacer />
+          <Input.Password
+            required
+            bordered
+            label="Repeat password"
+            size="xl"
+            aria-invalid={!!errors.repeatPassword?.message}
+            status={errors.repeatPassword?.message ? 'error' : 'default'}
+            {...register('repeatPassword')}
+          />
+          {errors.repeatPassword?.message && (
+            <Text role="alert">{errors.repeatPassword.message}</Text>
+          )}
+          <Spacer />
+          <Button auto size="lg" type="submit" disabled={loading}>
+            {loading ? (
+              <Loading color="currentColor" />
+            ) : (
+              <span>Create account</span>
+            )}
+          </Button>
+        </Form>
+      </FormContainer>
+    </>
   );
 };
 

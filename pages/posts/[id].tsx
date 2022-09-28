@@ -34,7 +34,7 @@ function Post() {
   return (
     <>
       <Head>
-        <title>Chirper - Post</title>
+        <title>Chirper - {post.title}</title>
       </Head>
       <Container
         gap={1}
