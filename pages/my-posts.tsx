@@ -1,5 +1,6 @@
 import { Container, Text } from '@nextui-org/react';
 import { useSession } from 'next-auth/react';
+import Head from 'next/head';
 import Link from 'next/link';
 import useSWR from 'swr';
 import ErrorIndicator from '../components/ErrorIndicator';
@@ -22,18 +23,23 @@ const MyPostsPage: NextPageWithLayout = () => {
   if (!posts) return <LoadingIndicator />;
 
   return (
-    <Container gap={1}>
-      <Text h2>My posts</Text>
-      <PostsContainer>
-        {posts.map((post) => (
-          <Link href={`/posts/${post.id}`} key={post.id}>
-            <div>
-              <PostCard post={post} isPressable />
-            </div>
-          </Link>
-        ))}
-      </PostsContainer>
-    </Container>
+    <>
+      <Head>
+        <title>Chirper - My posts</title>
+      </Head>
+      <Container gap={1}>
+        <Text h2>My posts</Text>
+        <PostsContainer>
+          {posts.map((post) => (
+            <Link href={`/posts/${post.id}`} key={post.id}>
+              <div>
+                <PostCard post={post} isPressable />
+              </div>
+            </Link>
+          ))}
+        </PostsContainer>
+      </Container>
+    </>
   );
 };
 

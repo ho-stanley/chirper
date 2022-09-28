@@ -13,7 +13,6 @@ export const signupSchema = z
     password: z
       .string()
       .min(8, { message: 'Password must contain at least 8 characters' })
-      .trim()
       .max(250, { message: 'Password must contain at most 250 characters' })
       .trim(),
     repeatPassword: z
@@ -29,4 +28,15 @@ export const signupSchema = z
     path: ['repeatPassword'],
   });
 
-export const signinSchema = z.object({});
+export const newPostSchema = z.object({
+  title: z
+    .string()
+    .min(1, { message: 'Title must contain at least 1 character' })
+    .max(50, { message: 'Title must contain at most 50 characters' })
+    .trim(),
+  body: z
+    .string()
+    .min(1, { message: 'Message must contain at least 1 character' })
+    .max(250, { message: 'Message must contain at most 250 characters' })
+    .trim(),
+});

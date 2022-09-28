@@ -1,18 +1,20 @@
 import { AxiosError } from 'axios';
 import { useState } from 'react';
-import { ResponseError } from '../../types/response-error';
-import { SignupData, SignupResponse } from '../../types/signup';
-import { signupUser } from './axios-http';
+import { NewPostData, NewPostResponse } from '../types/post';
+import { ResponseError } from '../types/response-error';
+import useAxios from './useAxios';
 
-export default function useSignup() {
+export default function useNewPost() {
+  const instance = useAxios();
   const [isLoading, setIsLoading] = useState(false);
-  const [userData, setUserData] = useState<SignupResponse | null>(null);
+  const [postData, setPostData] = useState<NewPostResponse | null>(null);
   const [error, setError] = useState('');
 
-  const signup = (signupData: SignupData) => {
+  const newPost = (newPostData: NewPostData) => {
     setIsLoading(true);
-    signupUser(signupData)
-      .then((data) => setUserData(data))
+    instance
+      .post<NewPostResponse>('/posts', newPostData)
+      .then((res) => setPostData(res.data))
       .catch((e: AxiosError) => {
         if (e.response) {
           const errorData = e.response.data as ResponseError;
@@ -27,9 +29,9 @@ export default function useSignup() {
   };
 
   return {
-    data: userData,
+    data: postData,
     loading: isLoading,
     error,
-    signup,
+    newPost,
   };
 }
