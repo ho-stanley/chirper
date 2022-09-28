@@ -7,6 +7,7 @@ import CommentCard from '../../components/CommentCard';
 import CommentsContainer from '../../components/CommentsContainer';
 import ErrorIndicator from '../../components/ErrorIndicator';
 import LoadingIndicator from '../../components/LoadingIndicator';
+import NotFoundIndicator from '../../components/NotFoundIndicator';
 import PostCard from '../../components/PostCard';
 import { Post as PostType } from '../../types/post';
 import { API_URL } from '../../utils/config';
@@ -23,13 +24,15 @@ type PostProps = {
 function Post() {
   const router = useRouter();
   const { id } = router.query;
-  const { data: post, error } = useSWR<PostType>(
-    `${URL}/${id}?comments=true`,
-    fetcher
-  );
+  const {
+    data: post,
+    error,
+    isValidating,
+  } = useSWR<PostType>(`${URL}/${id}?comments=true`, fetcher);
 
   if (error) return <ErrorIndicator />;
-  if (!post) return <LoadingIndicator />;
+  if (!post && isValidating) return <LoadingIndicator />;
+  if (!post) return <NotFoundIndicator />;
 
   return (
     <>
