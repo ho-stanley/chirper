@@ -1,8 +1,8 @@
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useState } from 'react';
-import { ResponseError } from '../../types/response-error';
-import { SignupData, SignupResponse } from '../../types/signup';
-import { signupUser } from './axios-http';
+import { ResponseError } from '../types/response-error';
+import { SignupData, SignupResponse } from '../types/signup';
+import { API_URL } from '../utils/config';
 
 export default function useSignup() {
   const [isLoading, setIsLoading] = useState(false);
@@ -11,8 +11,9 @@ export default function useSignup() {
 
   const signup = (signupData: SignupData) => {
     setIsLoading(true);
-    signupUser(signupData)
-      .then((data) => setUserData(data))
+    axios
+      .post<SignupResponse>(`${API_URL}/users`, signupData)
+      .then((res) => setUserData(res.data))
       .catch((e: AxiosError) => {
         if (e.response) {
           const errorData = e.response.data as ResponseError;
