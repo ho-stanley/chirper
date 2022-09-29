@@ -40,3 +40,11 @@ export const newPostSchema = z.object({
     .max(250, { message: 'Message must contain at most 250 characters' })
     .trim(),
 });
+
+export const newCommentSchema = z.object({
+  body: z
+    .string()
+    .min(1, { message: 'Comment must contain at least 1 character' })
+    .max(256, { message: 'Comment must contain at most 256 characters' })
+    .trim(),
+});

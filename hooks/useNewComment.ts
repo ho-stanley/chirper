@@ -1,23 +1,25 @@
 import { AxiosError } from 'axios';
 import { useState } from 'react';
-import { NewPostData, NewPostResponse } from '../types/post';
+import { NewCommentData, NewCommentResponse } from '../types/comment';
 import { ResponseError } from '../types/response-error';
 import useAxios from './useAxios';
 
-export default function useNewPost() {
+export default function useNewComment() {
   const instance = useAxios();
   const [isLoading, setIsLoading] = useState(false);
-  const [postData, setPostData] = useState<NewPostResponse | null>(null);
+  const [commentData, setCommentData] = useState<NewCommentResponse | null>(
+    null
+  );
   const [error, setError] = useState('');
 
-  const newPost = (newPostData: NewPostData) => {
-    setPostData(null);
+  const newComment = (newCommentData: NewCommentData, postId: string = '') => {
+    setCommentData(null);
     setIsLoading(true);
     instance
-      .post<NewPostResponse>('/posts', newPostData)
+      .post<NewCommentResponse>(`/posts/${postId}/comments`, newCommentData)
       .then((res) => {
         setError('');
-        setPostData(res.data);
+        setCommentData(res.data);
       })
       .catch((e: AxiosError) => {
         if (e.response) {
@@ -33,9 +35,9 @@ export default function useNewPost() {
   };
 
   return {
-    data: postData,
+    data: commentData,
     loading: isLoading,
     error,
-    newPost,
+    newComment,
   };
 }

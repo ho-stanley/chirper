@@ -1,17 +1,31 @@
-import { Card, Container, Spacer, Text } from '@nextui-org/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Button,
+  Card,
+  Container,
+  Loading,
+  Spacer,
+  Text,
+} from '@nextui-org/react';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import useSWR, { SWRConfig } from 'swr';
+import { useEffect } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import useSWR, { SWRConfig, useSWRConfig } from 'swr';
+import CommentBox from '../../components/CommentBox';
 import CommentCard from '../../components/CommentCard';
 import CommentsContainer from '../../components/CommentsContainer';
 import ErrorIndicator from '../../components/ErrorIndicator';
 import LoadingIndicator from '../../components/LoadingIndicator';
 import NotFoundIndicator from '../../components/NotFoundIndicator';
 import PostCard from '../../components/PostCard';
+import useNewComment from '../../hooks/useNewComment';
+import { NewCommentInputs } from '../../types/comment';
 import { Post as PostType } from '../../types/post';
 import { API_URL } from '../../utils/config';
 import { fetcher } from '../../utils/http/axios-http';
+import { newCommentSchema } from '../../utils/validation-schema';
 import { NextPageWithLayout } from '../_app';
 
 const URL = `${API_URL}/posts`;
@@ -24,15 +38,38 @@ type PostProps = {
 function Post() {
   const router = useRouter();
   const { id } = router.query;
+  const { mutate } = useSWRConfig();
   const {
     data: post,
-    error,
+    error: postError,
     isValidating,
   } = useSWR<PostType>(`${URL}/${id}?comments=true`, fetcher);
+  const {
+    register,
+    handleSubmit,
+    resetField,
+    formState: { errors },
+  } = useForm<NewCommentInputs>({ resolver: zodResolver(newCommentSchema) });
+  const {
+    data: commentData,
+    error: commentError,
+    loading: commentLoading,
+    newComment,
+  } = useNewComment();
 
-  if (error) return <ErrorIndicator />;
+  // Refetch comments after a new comment was posted
+  useEffect(() => {
+    if (commentData) mutate(`${URL}/${id}?comments=true`);
+  }, [mutate, id, commentData]);
+
+  if (postError) return <ErrorIndicator />;
   if (!post && isValidating) return <LoadingIndicator />;
   if (!post) return <NotFoundIndicator />;
+
+  const onSubmit: SubmitHandler<NewCommentInputs> = (newCommentData) => {
+    newComment(newCommentData, id?.toString());
+    resetField('body');
+  };
 
   return (
     <>
@@ -50,14 +87,29 @@ function Post() {
       >
         <Spacer y={1} />
         <PostCard post={post} />
-        <Text
-          h4
-          css={{
-            pt: '$4',
-          }}
-        >
-          Comments
-        </Text>
+        <Spacer y={0.5} />
+        {commentError && (
+          <Text blockquote color="error">
+            {commentError}
+          </Text>
+        )}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <CommentBox register={register} errors={errors} />
+          <Spacer y={0.25} />
+          <Button
+            type="submit"
+            auto
+            css={{ ml: 'auto' }}
+            disabled={commentLoading}
+          >
+            {commentLoading ? (
+              <Loading color="currentColor" />
+            ) : (
+              <span>Reply</span>
+            )}
+          </Button>
+        </form>
+        <Text h4>Comments</Text>
         {post.comments!.length > 0 ? (
           <CommentsContainer>
             {post.comments?.map((comment) => (
