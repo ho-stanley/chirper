@@ -11,10 +11,14 @@ export default function useNewPost() {
   const [error, setError] = useState('');
 
   const newPost = (newPostData: NewPostData) => {
+    setPostData(null);
     setIsLoading(true);
     instance
       .post<NewPostResponse>('/posts', newPostData)
-      .then((res) => setPostData(res.data))
+      .then((res) => {
+        setError('');
+        setPostData(res.data);
+      })
       .catch((e: AxiosError) => {
         if (e.response) {
           const errorData = e.response.data as ResponseError;
