@@ -14,7 +14,7 @@ const menuItems = [
   { label: 'Home', href: '/', key: 'home' },
   { label: 'New post', href: '/new-post', key: 'new_post' },
   { label: 'My posts', href: '/my-posts', key: 'my_posts' },
-  { label: 'Search', href: '/', key: 'search' },
+  { label: 'Search posts', href: '/search', key: 'search' },
 ];
 
 export default function Layout({ children }: LayoutProps) {

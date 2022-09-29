@@ -48,3 +48,11 @@ export const newCommentSchema = z.object({
     .max(256, { message: 'Comment must contain at most 256 characters' })
     .trim(),
 });
+
+export const searchSchema = z.object({
+  keyword: z
+    .string()
+    .min(1, { message: 'Search word must contain at least 1 character' })
+    .max(50, { message: 'Search word must contain at most 50 characters' })
+    .trim(),
+});
