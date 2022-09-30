@@ -3,7 +3,7 @@ import Role from './types/role.enum';
 
 export default withAuth({
   callbacks: {
-    authorized({ req, token }) {
+    async authorized({ req, token }) {
       if (req.nextUrl.pathname === '/a') {
         return token?.role === Role.Admin;
       }

@@ -1,0 +1,19 @@
+{
+  "name": "Chirper",
+  "short_name": "Chirper",
+  "description": "Post your thoughts or comment on other users' opinions.",
+  "icons": [
+    {
+      "src": "logo.svg",
+      "sizes": "48x48 72x72 96x96 128x128 256x256 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "theme_color": "#0072f5",
+  "background_color": "#FFFFFF",
+  "start_url": "/",
+  "scope": "/",
+  "display": "minimal-ui",
+  "orientation": "portrait"
+}
