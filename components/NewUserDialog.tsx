@@ -57,7 +57,7 @@ const NewUserDialog = ({ visible, onClose }: NewUserDialogProps) => {
       onClose={modalClose}
     >
       <Modal.Header>
-        <Text h3 id="model-title">
+        <Text h3 id="modal-title">
           Create new user
         </Text>
       </Modal.Header>
