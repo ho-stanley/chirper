@@ -2,9 +2,11 @@ import { Button, Col, Modal, Row, Spacer, Text } from '@nextui-org/react';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useSWRConfig } from 'swr';
 import useAxios from '../hooks/useAxios';
 import Role from '../types/role.enum';
 import { User } from '../types/user';
+import { API_URL } from '../utils/config';
 
 type RoleChangeDialogProps = {
   user: User | null;
@@ -24,6 +26,7 @@ const RoleChangeDialog = ({
   const { register, handleSubmit, reset } = useForm<RoleInputs>();
   const instance = useAxios();
   const [error, setError] = useState('');
+  const { mutate } = useSWRConfig();
 
   const modalClose = () => {
     reset();
@@ -35,6 +38,7 @@ const RoleChangeDialog = ({
     instance
       .patch<User>(`/users/${user?.username}/role`, { ...data })
       .then((res) => {
+        mutate(`${API_URL}/users`);
         modalClose();
         return res.data;
       })

@@ -3,9 +3,11 @@ import { Button, Input, Modal, Spacer, Text } from '@nextui-org/react';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useSWRConfig } from 'swr';
 import useAxios from '../hooks/useAxios';
 import Role from '../types/role.enum';
 import { User } from '../types/user';
+import { API_URL } from '../utils/config';
 import { newUserSchema } from '../utils/validation-schema';
 
 type NewUserDialogProps = {
@@ -29,6 +31,7 @@ const NewUserDialog = ({ visible, onClose }: NewUserDialogProps) => {
   } = useForm<UserInputs>({ resolver: zodResolver(newUserSchema) });
   const instance = useAxios();
   const [error, setError] = useState('');
+  const { mutate } = useSWRConfig();
 
   const modalClose = () => {
     reset();
@@ -40,6 +43,7 @@ const NewUserDialog = ({ visible, onClose }: NewUserDialogProps) => {
     instance
       .post<User>('/admin/users', { ...data })
       .then((res) => {
+        mutate(`${API_URL}/users`);
         modalClose();
         return res.data;
       })
