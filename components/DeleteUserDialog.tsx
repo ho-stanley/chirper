@@ -1,8 +1,10 @@
 import { Button, Modal, Text } from '@nextui-org/react';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
+import { useSWRConfig } from 'swr';
 import useAxios from '../hooks/useAxios';
 import { User } from '../types/user';
+import { API_URL } from '../utils/config';
 
 type DeleteUserDialogProps = {
   user: User | null;
@@ -17,6 +19,7 @@ const DeleteUserDialog = ({
 }: DeleteUserDialogProps) => {
   const instance = useAxios();
   const [error, setError] = useState('');
+  const { mutate } = useSWRConfig();
 
   const modalClose = () => {
     setError('');
@@ -27,6 +30,7 @@ const DeleteUserDialog = ({
     instance
       .delete<User>(`/users/${user?.username}`)
       .then((res) => {
+        mutate(`${API_URL}/users`);
         modalClose();
         return res.data;
       })
