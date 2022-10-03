@@ -6,6 +6,8 @@
     "react/jsx-one-expression-per-line": "off",
     "comma-dangle": "off",
     "import/extensions": "off",
+    "no-undef": "off",
+    "no-unused-vars": "off",
     "object-curly-newline": [
       "error",
       {
