@@ -32,6 +32,7 @@ const NewUserDialog = ({ visible, onClose }: NewUserDialogProps) => {
 
   const modalClose = () => {
     reset();
+    setError('');
     onClose();
   };
 

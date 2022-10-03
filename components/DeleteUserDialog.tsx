@@ -19,6 +19,7 @@ const DeleteUserDialog = ({
   const [error, setError] = useState('');
 
   const modalClose = () => {
+    setError('');
     onClose();
   };
 
