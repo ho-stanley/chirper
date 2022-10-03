@@ -27,7 +27,7 @@ const MyPostsPage: NextPageWithLayout = () => {
       <Head>
         <title>Chirper - My posts</title>
       </Head>
-      <Container gap={1}>
+      <Container gap={1} css={{ mb: '$4' }}>
         <Text h2>My posts</Text>
         <PostsContainer>
           {posts.map((post) => (
