@@ -59,6 +59,7 @@ const SignupPage: NextPageWithLayout = () => {
           <Input
             required
             bordered
+            autoComplete="true"
             label="Username"
             size="xl"
             aria-invalid={!!errors.username?.message}
