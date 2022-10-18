@@ -10,9 +10,6 @@ export default withAuth({
       return !!token;
     },
   },
-  pages: {
-    signIn: '/signin',
-  },
 });
 
 export const config = { matcher: ['/a', '/my-posts', '/new-post'] };
