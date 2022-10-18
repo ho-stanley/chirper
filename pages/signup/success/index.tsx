@@ -8,8 +8,8 @@ const SuccessPage: NextPageWithLayout = () => (
       Success
     </Text>
     <Text blockquote>
-      You&apos;ve successfully signed up! Click{' '}
-      <Link href="/api/auth/signin">here</Link> to sign in.
+      You&apos;ve successfully signed up! Click <Link href="/signin">here</Link>{' '}
+      to sign in.
     </Text>
   </Container>
 );
