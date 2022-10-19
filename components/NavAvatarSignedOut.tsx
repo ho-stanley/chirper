@@ -1,16 +1,11 @@
 import { Avatar, Dropdown, Navbar, Text } from '@nextui-org/react';
+import { useRouter } from 'next/router';
 import { BsPencilSquare } from 'react-icons/bs';
 import { FiLogIn } from 'react-icons/fi';
 
-type NavAvatarSignedOutProps = {
-  push: Function;
-  signIn: Function;
-};
+export default function NavAvatarSignedOut() {
+  const { push } = useRouter();
 
-export default function NavAvatarSignedOut({
-  push,
-  signIn,
-}: NavAvatarSignedOutProps) {
   return (
     <Dropdown placement="bottom-right">
       <Navbar.Item>
@@ -41,7 +36,7 @@ export default function NavAvatarSignedOut({
           textValue="Sign in"
           icon={<FiLogIn />}
         >
-          <Text color="primary" onClick={() => signIn()}>
+          <Text color="primary" onClick={() => push('/signin')}>
             Sign In
           </Text>
         </Dropdown.Item>
