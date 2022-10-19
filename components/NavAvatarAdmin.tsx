@@ -1,24 +1,18 @@
 import { Avatar, Dropdown, Navbar, Text } from '@nextui-org/react';
-import { Session } from 'next-auth';
+import { signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { FiLogOut } from 'react-icons/fi';
 
-type NavAvatarAdminProps = {
-  push: Function;
-  signOut: Function;
-  session: Session;
-};
+export default function NavAvatarAdmin() {
+  const { push } = useRouter();
+  const { data: session } = useSession();
 
-export default function NavAvatarAdmin({
-  push,
-  signOut,
-  session,
-}: NavAvatarAdminProps) {
   return (
     <Dropdown placement="bottom-right">
       <Navbar.Item>
         <Dropdown.Trigger>
           <Avatar
-            text={session.user.username}
+            text={session?.user.username}
             color="primary"
             textColor="white"
             bordered
@@ -36,7 +30,7 @@ export default function NavAvatarAdmin({
             Signed in as
           </Text>
           <Text b css={{ d: 'flex' }}>
-            {session.user.username}
+            {session?.user.username}
           </Text>
         </Dropdown.Item>
         <Dropdown.Item key="manage-users" withDivider textValue="Manage users">
