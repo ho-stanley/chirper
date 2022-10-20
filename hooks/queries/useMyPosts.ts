@@ -8,8 +8,8 @@ async function fetchMyPosts(userId: string) {
   return data;
 }
 
-function useMyPosts(userId: string | undefined) {
-  return useQuery(['myPosts', userId], () => fetchMyPosts(userId || ''), {
+function useMyPosts(userId: string) {
+  return useQuery(['myPosts', userId], () => fetchMyPosts(userId), {
     enabled: !!userId,
   });
 }

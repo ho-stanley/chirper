@@ -2,25 +2,23 @@ import { Container, Text } from '@nextui-org/react';
 import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 import Link from 'next/link';
-import useSWR from 'swr';
 import ErrorIndicator from '../components/ErrorIndicator';
 import LoadingIndicator from '../components/LoadingIndicator';
 import PostCard from '../components/PostCard';
 import PostsContainer from '../components/PostsContainer';
-import { Post } from '../types/post';
-import { API_URL } from '../utils/config';
-import { fetcher } from '../utils/http/axios-http';
+import { useMyPosts } from '../hooks/queries';
 import { NextPageWithLayout } from './_app';
 
 const MyPostsPage: NextPageWithLayout = () => {
   const { data: session } = useSession();
-  const { data: posts, error } = useSWR<Post[]>(
-    session?.user ? `${API_URL}/posts?userId=${session.user.id}` : null,
-    fetcher
-  );
+  const {
+    data: posts,
+    isLoading,
+    isError,
+  } = useMyPosts(session?.user.id || '');
 
-  if (error) return <ErrorIndicator />;
-  if (!posts) return <LoadingIndicator />;
+  if (isLoading) return <LoadingIndicator />;
+  if (isError) return <ErrorIndicator />;
 
   return (
     <>
