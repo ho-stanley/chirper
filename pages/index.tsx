@@ -2,30 +2,20 @@ import React from 'react';
 import Head from 'next/head';
 import { Container, Text } from '@nextui-org/react';
 import { GetServerSideProps } from 'next';
-import useSWR, { SWRConfig } from 'swr';
 import Link from 'next/link';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import type { NextPageWithLayout } from './_app';
 import PostCard from '../components/PostCard';
-import { Post } from '../types/post';
-import { API_URL } from '../utils/config';
-import { fetcher } from '../utils/http/axios-http';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ErrorIndicator from '../components/ErrorIndicator';
 import PostsContainer from '../components/PostsContainer';
-
-const COUNT = 10;
-const URL = `${API_URL}/posts?limit=${COUNT}`;
-type PageProps = {
-  fallback: {
-    [key: string]: Post[];
-  };
-};
+import { fetchPosts, usePosts } from '../hooks/queries';
 
 function RecentPosts() {
-  const { data: posts, error } = useSWR<Post[]>(URL, fetcher);
+  const { data: posts, isLoading, isError } = usePosts(10);
 
-  if (error) return <ErrorIndicator />;
-  if (!posts) return <LoadingIndicator />;
+  if (isLoading) return <LoadingIndicator />;
+  if (isError) return <ErrorIndicator />;
 
   return (
     <Container gap={1} css={{ mb: '$4' }}>
@@ -43,31 +33,25 @@ function RecentPosts() {
   );
 }
 
-const Page: NextPageWithLayout<PageProps> = ({ fallback }) => (
-  <SWRConfig value={{ fallback }}>
+const Page: NextPageWithLayout = () => (
+  <>
     <Head>
       <title>Chirper - Home</title>
     </Head>
     <RecentPosts />
-  </SWRConfig>
+  </>
 );
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  try {
-    const posts = await fetcher<Post[]>(URL);
+  const limit = 10;
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(['posts', limit], () => fetchPosts(limit));
 
-    return {
-      props: {
-        fallback: {
-          [URL]: posts,
-        },
-      },
-    };
-  } catch {
-    return {
-      notFound: true,
-    };
-  }
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
 };
 
 export default Page;
