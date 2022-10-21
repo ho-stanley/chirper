@@ -1,19 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Button,
-  Input,
-  Loading,
-  Spacer,
-  Text,
-  Textarea,
-} from '@nextui-org/react';
+import { Button, Input, Spacer, Text, Textarea } from '@nextui-org/react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Form from '../components/Form';
 import FormContainer from '../components/FormContainer';
-import useNewPost from '../hooks/useNewPost';
+import { useNewPost } from '../hooks/mutations';
 import { newPostSchema } from '../utils/validation-schema';
 import { NextPageWithLayout } from './_app';
 
@@ -29,18 +21,18 @@ const NewPostPage: NextPageWithLayout = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<NewPostInputs>({ resolver: zodResolver(newPostSchema) });
-  const { data: post, error, loading, newPost } = useNewPost();
+  const {
+    errorMessage,
+    newPostMutation: { isLoading, mutate },
+  } = useNewPost();
 
   const onSubmit: SubmitHandler<NewPostInputs> = (newPostData) => {
-    newPost(newPostData);
+    mutate(newPostData, {
+      onSuccess: (post) => {
+        push(`/posts/${post.id}`);
+      },
+    });
   };
-
-  useEffect(() => {
-    // Redirect to newly created post page
-    if (!loading && post) {
-      push(`/posts/${post.id}`);
-    }
-  }, [loading, post, push]);
 
   return (
     <>
@@ -49,9 +41,9 @@ const NewPostPage: NextPageWithLayout = () => {
       </Head>
       <FormContainer>
         <Text h2>New post</Text>
-        {error && (
+        {errorMessage && (
           <Text blockquote color="error">
-            {error}
+            {errorMessage}
           </Text>
         )}
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -82,8 +74,8 @@ const NewPostPage: NextPageWithLayout = () => {
             <Text role="alert">{errors.body.message}</Text>
           )}
           <Spacer />
-          <Button auto size="lg" type="submit" disabled={loading}>
-            {loading ? <Loading color="currentColor" /> : <span>Send</span>}
+          <Button auto size="lg" type="submit" disabled={isLoading}>
+            Send
           </Button>
         </Form>
       </FormContainer>
