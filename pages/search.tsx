@@ -4,12 +4,9 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import useSWR from 'swr';
 import PostCard from '../components/PostCard';
 import PostsContainer from '../components/PostsContainer';
-import { Post } from '../types/post';
-import { API_URL } from '../utils/config';
-import { fetcher } from '../utils/http/axios-http';
+import { useSearch } from '../hooks/queries/useSearch';
 import { searchSchema } from '../utils/validation-schema';
 import { NextPageWithLayout } from './_app';
 
@@ -18,17 +15,17 @@ type SearchInputs = {
 };
 
 const SearchPage: NextPageWithLayout = () => {
-  const [keyword, setKeyword] = useState<string | null>(null);
+  const [keyword, setKeyword] = useState<string>('');
   const {
     register,
     handleSubmit,
     resetField,
     formState: { errors },
-  } = useForm<SearchInputs>({ resolver: zodResolver(searchSchema) });
-  const { data: posts } = useSWR<Post[]>(
-    keyword ? `${API_URL}/posts?keyword=${keyword}` : null,
-    fetcher
-  );
+  } = useForm<SearchInputs>({
+    resolver: zodResolver(searchSchema),
+    defaultValues: { keyword: '' },
+  });
+  const { data: posts, isFetched } = useSearch(keyword);
 
   const onSubmit: SubmitHandler<SearchInputs> = (data) => {
     setKeyword(data.keyword);
@@ -66,6 +63,7 @@ const SearchPage: NextPageWithLayout = () => {
 
         <Spacer />
         <PostsContainer>
+          {posts?.length === 0 && isFetched && <Text>No posts found.</Text>}
           {posts &&
             posts.map((post) => (
               <Link href={`/posts/${post.id}`} key={post.id}>
