@@ -1,13 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Button,
-  Card,
-  Container,
-  Loading,
-  Spacer,
-  Text,
-} from '@nextui-org/react';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
+import { Button, Card, Container, Spacer, Text } from '@nextui-org/react';
+import { dehydrate, QueryClient, useQueryClient } from '@tanstack/react-query';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -19,8 +12,8 @@ import ErrorIndicator from '../../components/ErrorIndicator';
 import LoadingIndicator from '../../components/LoadingIndicator';
 import NotFoundIndicator from '../../components/NotFoundIndicator';
 import PostCard from '../../components/PostCard';
+import { useNewComment } from '../../hooks/mutations';
 import { fetchPost, usePost } from '../../hooks/queries';
-import useNewComment from '../../hooks/useNewComment';
 import { NewCommentInputs } from '../../types/comment';
 import { newCommentSchema } from '../../utils/validation-schema';
 import { NextPageWithLayout } from '../_app';
@@ -29,26 +22,36 @@ const PostPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { id } = router.query;
   const postId = id!.toString();
-  const { data: post, isLoading, isError } = usePost(postId);
+  const {
+    data: post,
+    isLoading: postIsLoading,
+    isError: postIsError,
+  } = usePost(postId);
+  const {
+    errorMessage: commentErrorMsg,
+    newCommentMutation: { isLoading: commentIsLoading, mutate },
+  } = useNewComment();
   const {
     register,
     handleSubmit,
     resetField,
     formState: { errors },
   } = useForm<NewCommentInputs>({ resolver: zodResolver(newCommentSchema) });
-  const {
-    data: commentData,
-    error: commentError,
-    loading: commentLoading,
-    newComment,
-  } = useNewComment();
+  const queryClient = useQueryClient();
 
-  if (isLoading) return <LoadingIndicator />;
+  if (postIsLoading) return <LoadingIndicator />;
   if (!post) return <NotFoundIndicator />;
-  if (isError) return <ErrorIndicator />;
+  if (postIsError) return <ErrorIndicator />;
 
   const onSubmit: SubmitHandler<NewCommentInputs> = (newCommentData) => {
-    newComment(newCommentData, id?.toString());
+    mutate(
+      { newComment: newCommentData, postId },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(['post', postId]);
+        },
+      }
+    );
     resetField('body');
   };
 
@@ -69,9 +72,9 @@ const PostPage: NextPageWithLayout = () => {
         <Spacer y={1} />
         <PostCard post={post} />
         <Spacer y={0.5} />
-        {commentError && (
+        {commentErrorMsg && (
           <Text blockquote color="error">
-            {commentError}
+            {commentErrorMsg}
           </Text>
         )}
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -81,13 +84,9 @@ const PostPage: NextPageWithLayout = () => {
             type="submit"
             auto
             css={{ ml: 'auto' }}
-            disabled={commentLoading}
+            disabled={commentIsLoading}
           >
-            {commentLoading ? (
-              <Loading color="currentColor" />
-            ) : (
-              <span>Reply</span>
-            )}
+            Reply
           </Button>
         </form>
         <Text h4>Comments</Text>
