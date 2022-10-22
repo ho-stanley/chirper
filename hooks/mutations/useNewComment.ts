@@ -5,11 +5,16 @@ import { NewCommentData, NewCommentResponse } from '../../types/comment';
 import { ResponseError } from '../../types/response-error';
 import useAxios from '../useAxios';
 
+interface NewCommentVariables {
+  newComment: NewCommentData;
+  postId: string;
+}
+
 function useNewComment() {
   const http = useAxios();
   const [errorMessage, setErrorMessage] = useState('');
   const newCommentMutation = useMutation(
-    async (newComment: NewCommentData, postId = '') => {
+    async ({ newComment, postId = '' }: NewCommentVariables) => {
       const { data } = await http.post<NewCommentResponse>(
         `/posts/${postId}/comments`,
         newComment
