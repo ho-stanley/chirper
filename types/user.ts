@@ -5,3 +5,10 @@ export interface User {
   username: string;
   role: Role;
 }
+
+export interface NewUserData {
+  username: string;
+  password: string;
+  repeatPassword: string;
+  role: Role;
+}

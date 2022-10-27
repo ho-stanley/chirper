@@ -1,13 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input, Modal, Spacer, Text } from '@nextui-org/react';
-import { AxiosError } from 'axios';
-import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useSWRConfig } from 'swr';
-import useAxios from '../hooks/useAxios';
+import { useNewUser } from '../hooks/mutations';
 import Role from '../types/role.enum';
-import { User } from '../types/user';
-import { API_URL } from '../utils/config';
 import { newUserSchema } from '../utils/validation-schema';
 
 type NewUserDialogProps = {
@@ -29,29 +25,24 @@ const NewUserDialog = ({ visible, onClose }: NewUserDialogProps) => {
     reset,
     formState: { errors },
   } = useForm<UserInputs>({ resolver: zodResolver(newUserSchema) });
-  const instance = useAxios();
-  const [error, setError] = useState('');
-  const { mutate } = useSWRConfig();
+  const {
+    errorMessage,
+    newUserMutation: { isLoading, mutate },
+  } = useNewUser();
+  const queryClient = useQueryClient();
 
   const modalClose = () => {
     reset();
-    setError('');
     onClose();
   };
 
-  const onSubmit: SubmitHandler<UserInputs> = (data) => {
-    instance
-      .post<User>('/admin/users', { ...data })
-      .then((res) => {
-        mutate(`${API_URL}/users`);
+  const onSubmit: SubmitHandler<UserInputs> = (newUserData) => {
+    mutate(newUserData, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['users']);
         modalClose();
-        return res.data;
-      })
-      .catch((e) => {
-        if (e instanceof AxiosError) {
-          setError(e.message);
-        }
-      });
+      },
+    });
   };
 
   return (
@@ -67,7 +58,7 @@ const NewUserDialog = ({ visible, onClose }: NewUserDialogProps) => {
         </Text>
       </Modal.Header>
       <Modal.Body>
-        {error}
+        {errorMessage}
         <form onSubmit={handleSubmit(onSubmit)}>
           <Input
             required
@@ -113,7 +104,7 @@ const NewUserDialog = ({ visible, onClose }: NewUserDialogProps) => {
             </select>
           </label>
           <Spacer y={0.5} />
-          <Button auto type="submit">
+          <Button auto type="submit" disabled={isLoading}>
             Create
           </Button>
         </form>
