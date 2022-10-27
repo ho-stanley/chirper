@@ -1,10 +1,7 @@
 import { Button, Modal, Text } from '@nextui-org/react';
-import { AxiosError } from 'axios';
-import { useState } from 'react';
-import { useSWRConfig } from 'swr';
-import useAxios from '../hooks/useAxios';
+import { useQueryClient } from '@tanstack/react-query';
+import { useDeleteUser } from '../hooks/mutations';
 import { User } from '../types/user';
-import { API_URL } from '../utils/config';
 
 type DeleteUserDialogProps = {
   user: User | null;
@@ -17,28 +14,25 @@ const DeleteUserDialog = ({
   visible,
   onClose,
 }: DeleteUserDialogProps) => {
-  const instance = useAxios();
-  const [error, setError] = useState('');
-  const { mutate } = useSWRConfig();
+  const {
+    errorMessage,
+    deleteUserMutation: { isLoading, mutate },
+  } = useDeleteUser();
+  const queryClient = useQueryClient();
 
   const modalClose = () => {
-    setError('');
     onClose();
   };
 
   const onDelete = () => {
-    instance
-      .delete<User>(`/users/${user?.username}`)
-      .then((res) => {
-        mutate(`${API_URL}/users`);
-        modalClose();
-        return res.data;
-      })
-      .catch((e) => {
-        if (e instanceof AxiosError) {
-          setError(e.message);
-        }
+    if (user?.username) {
+      mutate(user.username, {
+        onSuccess: () => {
+          queryClient.invalidateQueries(['users']);
+        },
       });
+      modalClose();
+    }
   };
 
   return (
@@ -49,7 +43,7 @@ const DeleteUserDialog = ({
       onClose={modalClose}
     >
       <Modal.Body>
-        {error}
+        {errorMessage}
         <Text id="modal-title" size="$lg">
           Do you want to delete user <Text b>{user?.username}</Text>?
         </Text>
@@ -58,7 +52,7 @@ const DeleteUserDialog = ({
         <Button auto autoFocus color="error" onClick={modalClose}>
           No
         </Button>
-        <Button auto onClick={onDelete}>
+        <Button auto onClick={onDelete} disabled={isLoading}>
           Yes
         </Button>
       </Modal.Footer>
