@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { DehydratedState } from '@tanstack/react-query';
 import type { NextComponentType, NextPageContext } from 'next';
 import type { Session } from 'next-auth';
 import type { Router } from 'next/router';
@@ -13,6 +14,7 @@ declare module 'next/app' {
     pageProps: P & {
       /** Initial session passed in from `getServerSideProps` or `getInitialProps` */
       session?: Session;
+      dehydratedState?: DehydratedState;
     };
   };
 }
