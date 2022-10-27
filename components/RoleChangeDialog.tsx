@@ -1,12 +1,9 @@
-import { Button, Col, Modal, Row, Spacer, Text } from '@nextui-org/react';
-import { AxiosError } from 'axios';
-import { useState } from 'react';
+import { Button, Modal, Row, Spacer, Text } from '@nextui-org/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useSWRConfig } from 'swr';
-import useAxios from '../hooks/useAxios';
+import { useRoleChange } from '../hooks/mutations';
 import Role from '../types/role.enum';
 import { User } from '../types/user';
-import { API_URL } from '../utils/config';
 
 type RoleChangeDialogProps = {
   user: User | null;
@@ -24,29 +21,29 @@ const RoleChangeDialog = ({
   onClose,
 }: RoleChangeDialogProps) => {
   const { register, handleSubmit, reset } = useForm<RoleInputs>();
-  const instance = useAxios();
-  const [error, setError] = useState('');
-  const { mutate } = useSWRConfig();
+  const {
+    errorMessage,
+    roleChangeMutation: { isLoading, mutate },
+  } = useRoleChange();
+  const queryClient = useQueryClient();
 
   const modalClose = () => {
     reset();
-    setError('');
     onClose();
   };
 
   const onSubmit: SubmitHandler<RoleInputs> = (data) => {
-    instance
-      .patch<User>(`/users/${user?.username}/role`, { ...data })
-      .then((res) => {
-        mutate(`${API_URL}/users`);
-        modalClose();
-        return res.data;
-      })
-      .catch((e) => {
-        if (e instanceof AxiosError) {
-          setError(e.message);
+    if (user) {
+      mutate(
+        { username: user.username, role: data.role },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries(['users']);
+            modalClose();
+          },
         }
-      });
+      );
+    }
   };
 
   return (
@@ -57,7 +54,7 @@ const RoleChangeDialog = ({
       onClose={modalClose}
     >
       <Modal.Body>
-        {error}
+        {errorMessage}
         <Text id="modal-title" size="$lg">
           Change role for <Text b>{user?.username}</Text>
         </Text>
@@ -77,7 +74,7 @@ const RoleChangeDialog = ({
             </Row>
           </label>
           <Spacer y={0.5} />
-          <Button auto type="submit">
+          <Button auto type="submit" disabled={isLoading}>
             Submit
           </Button>
         </form>
