@@ -25,13 +25,13 @@ const DeleteUserDialog = ({
   };
 
   const onDelete = () => {
-    if (user?.username) {
+    if (user) {
       mutate(user.username, {
         onSuccess: () => {
           queryClient.invalidateQueries(['users']);
+          modalClose();
         },
       });
-      modalClose();
     }
   };
 
